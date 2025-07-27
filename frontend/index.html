@@ -84,7 +84,8 @@
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
-      const socket = io("http://localhost:5000");
+      const BASE_URL = "https://crypto-crash-55jf.onrender.com";
+      const socket = io(BASE_URL);
 
       const log = (msg) => {
         const li = document.createElement("li");
@@ -152,7 +153,7 @@
         currency = currency.toUpperCase();
 
         try {
-          const res = await fetch("http://localhost:5000/api/game/bet", {
+          const res = await fetch(`${BASE_URL}/api/game/bet`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ playerId, usdAmount, currency }),
