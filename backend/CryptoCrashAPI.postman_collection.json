@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "Crypto Crash API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for testing Crypto Crash game backend APIs."
+  },
+  "item": [
+    {
+      "name": "Place Bet",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"REPLACE_WITH_PLAYER_ID\",\n  \"usdAmount\": 10,\n  \"currency\": \"BTC\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/game/bet",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "game", "bet"]
+        }
+      }
+    },
+    {
+      "name": "Cash Out",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"REPLACE_WITH_PLAYER_ID\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/game/cashout",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "game", "cashout"]
+        }
+      }
+    },
+    {
+      "name": "Get Wallet",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/wallet/PLAYER_ID",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "wallet", "PLAYER_ID"]
+        }
+      }
+    },
+    {
+      "name": "Get Transactions",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/wallet/PLAYER_ID/transactions",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "wallet", "PLAYER_ID", "transactions"]
+        }
+      }
+    }
+  ]
+}
