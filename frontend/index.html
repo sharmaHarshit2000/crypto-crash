@@ -46,11 +46,22 @@
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
+
+      .copy-btn {
+        margin-right: 5px;
+      }
     </style>
   </head>
 
   <body>
     <h1>Crypto Crash Game</h1>
+
+    <h3>Test Player IDs</h3>
+    <ul>
+      <li>Harshit: <code>68866621d65c7552a9c69a78</code> <button class="copy-btn" onclick="copyId('68866621d65c7552a9c69a78')">Copy</button></li>
+      <li>Vivek: <code>68866621d65c7552a9c69a79</code> <button class="copy-btn" onclick="copyId('68866621d65c7552a9c69a79')">Copy</button></li>
+      <li>Arnab: <code>68866621d65c7552a9c69a7a</code> <button class="copy-btn" onclick="copyId('68866621d65c7552a9c69a7a')">Copy</button></li>
+    </ul>
 
     <label for="playerId"><strong>Player ID:</strong></label>
     <input type="text" id="playerId" placeholder="Enter player ID" />
@@ -64,7 +75,7 @@
 
     <p id="multiplier">Multiplier: 1.00x</p>
 
-    <button id="cashoutBtn" onclick="cashout()">💸 Cash Out</button>
+    <button id="cashoutBtn" onclick="cashout()">Cash Out</button>
 
     <hr />
 
@@ -81,6 +92,11 @@
         document.getElementById("log").prepend(li);
       };
 
+      function copyId(id) {
+        navigator.clipboard.writeText(id);
+        alert("Copied: " + id);
+      }
+
       socket.on("connect", () => {
         log("Connected to server");
       });
@@ -91,9 +107,8 @@
       });
 
       socket.on("multiplier_update", (data) => {
-        document.getElementById(
-          "multiplier"
-        ).innerText = `Multiplier: ${data.multiplier}x`;
+        document.getElementById("multiplier").innerText =
+          `Multiplier: ${data.multiplier}x`;
       });
 
       socket.on("player_cashout", (data) => {
@@ -101,10 +116,12 @@
           `Player ${data.playerId} cashed out ${data.payoutCrypto} (${data.usdEquivalent} USD) at ${data.multiplier}x`
         );
       });
+
       socket.on("round_crash", (data) => {
         log(`Game crashed at ${data.multiplier}x`);
         document.getElementById("cashoutBtn").disabled = true;
       });
+
       function cashout() {
         const playerId = document.getElementById("playerId").value.trim();
         if (!playerId) {
@@ -114,7 +131,6 @@
 
         socket.emit("cashout_request", { playerId });
         log(`Sent cashout request for player ${playerId}`);
-
         document.getElementById("cashoutBtn").disabled = true;
       }
 
@@ -144,9 +160,7 @@
 
           const data = await res.json();
           if (res.ok) {
-            log(
-              `Bet placed for player ${playerId} (${usdAmount} USD in ${currency})`
-            );
+            log(`Bet placed for player ${playerId} (${usdAmount} USD in ${currency})`);
             document.getElementById("usdAmount").value = "";
           } else {
             log(`Failed to place bet: ${data.message}`);

@@ -19,6 +19,9 @@ const io = new Server(server, { cors: { origin: "*" } });
 app.use(cors());
 app.use(express.json());
 
+//Test Route
+app.get("/", res.status(200).json({Message: "Crypto-Crash-Server is running"}))
+
 // Routes
 app.use("/api/game", gameRoutes);
 app.use("/api/wallet", walletRoutes);
