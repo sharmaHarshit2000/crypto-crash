@@ -20,7 +20,9 @@ app.use(cors());
 app.use(express.json());
 
 //Test Route
-app.get("/", res.status(200).json({Message: "Crypto-Crash-Server is running"}))
+app.get("/", (req, res) =>
+  res.status(200).json({ Message: "Crypto-Crash-Server is running" })
+);
 
 // Routes
 app.use("/api/game", gameRoutes);
