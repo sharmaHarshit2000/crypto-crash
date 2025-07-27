@@ -5,6 +5,8 @@ import cors from "cors";
 import { Server } from "socket.io";
 
 import connectDB from "./config/db.js";
+import gameRoutes from "./routes/gameRoutes.js";
+import walletRoutes from "./routes/walletRoutes.js";
 import { initGameSocket } from "./sockets/gameSocket.js";
 
 dotenv.config();
@@ -16,6 +18,10 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use("/api/game", gameRoutes);
+app.use("/api/wallet", walletRoutes);
 
 // WebSocket
 initGameSocket(io);
