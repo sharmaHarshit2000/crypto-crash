@@ -4,6 +4,14 @@ A full-featured backend for a real-time "Crash Game" with crypto integration, pr
 
 ---
 
+## 🔗 Live Links
+
+- 🔗 GitHub: [https://github.com/sharmaHarshit2000/crypto-crash](https://github.com/sharmaHarshit2000/crypto-crash)
+- 🌍 Frontend (Netlify): [https://app-crypto-crash.netlify.app/](https://app-crypto-crash.netlify.app)
+- ⚙️ Backend (Render): [https://crypto-crash-55jf.onrender.com](https://crypto-crash-55jf.onrender.com)
+
+---
+
 ## 🚀 Project Overview
 
 Crypto Crash is a backend game server that:
