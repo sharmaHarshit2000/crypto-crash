@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Crypto Crash - WebSocket Client</title>
+    <link rel="icon" href="./favicon.png" type="image/png" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f3f4f6;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+      }
+
+      input,
+      button {
+        padding: 10px;
+        font-size: 1rem;
+        margin-top: 8px;
+        margin-bottom: 16px;
+      }
+
+      #multiplier {
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: green;
+        margin-top: 0;
+        margin-bottom: 20px;
+      }
+
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      #log {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      #log li {
+        margin-bottom: 6px;
+        padding: 4px 8px;
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Crypto Crash Game</h1>
+
+    <label for="playerId"><strong>Player ID:</strong></label>
+    <input type="text" id="playerId" placeholder="Enter player ID" />
+
+    <input type="number" id="usdAmount" placeholder="USD Amount" min="1" />
+    <select id="currency">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+    </select>
+    <button onclick="placeBet()">Place Bet</button>
+
+    <p id="multiplier">Multiplier: 1.00x</p>
+
+    <button id="cashoutBtn" onclick="cashout()">💸 Cash Out</button>
+
+    <hr />
+
+    <h3>Events:</h3>
+    <ul id="log"></ul>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:5000");
+
+      const log = (msg) => {
+        const li = document.createElement("li");
+        li.innerText = msg;
+        document.getElementById("log").prepend(li);
+      };
+
+      socket.on("connect", () => {
+        log("Connected to server");
+      });
+
+      socket.on("round_start", (data) => {
+        log(`New round started — Crash at ~${data.crashPoint.toFixed(2)}x`);
+        document.getElementById("cashoutBtn").disabled = false;
+      });
+
+      socket.on("multiplier_update", (data) => {
+        document.getElementById(
+          "multiplier"
+        ).innerText = `Multiplier: ${data.multiplier}x`;
+      });
+
+      socket.on("player_cashout", (data) => {
+        log(
+          `Player ${data.playerId} cashed out ${data.payoutCrypto} (${data.usdEquivalent} USD) at ${data.multiplier}x`
+        );
+      });
+      socket.on("round_crash", (data) => {
+        log(`Game crashed at ${data.multiplier}x`);
+        document.getElementById("cashoutBtn").disabled = true;
+      });
+      function cashout() {
+        const playerId = document.getElementById("playerId").value.trim();
+        if (!playerId) {
+          alert("Please enter a valid Player ID!");
+          return;
+        }
+
+        socket.emit("cashout_request", { playerId });
+        log(`Sent cashout request for player ${playerId}`);
+
+        document.getElementById("cashoutBtn").disabled = true;
+      }
+
+      async function placeBet() {
+        const playerId = document.getElementById("playerId").value.trim();
+        const usdAmount = document.getElementById("usdAmount").value.trim();
+        let currency = document.getElementById("currency").value.trim();
+
+        if (!playerId || !usdAmount || !currency) {
+          alert("Please fill in all fields");
+          return;
+        }
+
+        if (usdAmount <= 0) {
+          alert("Amount must be greater than 0");
+          return;
+        }
+
+        currency = currency.toUpperCase();
+
+        try {
+          const res = await fetch("http://localhost:5000/api/game/bet", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ playerId, usdAmount, currency }),
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            log(
+              `Bet placed for player ${playerId} (${usdAmount} USD in ${currency})`
+            );
+            document.getElementById("usdAmount").value = "";
+          } else {
+            log(`Failed to place bet: ${data.message}`);
+          }
+        } catch (err) {
+          console.error(err);
+          log("Network error placing bet");
+        }
+      }
+    </script>
+  </body>
+</html>
