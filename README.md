@@ -22,7 +22,6 @@ Crypto Crash is a backend game server that:
 git clone https://github.com/sharmaHarshit2000/crypto-crash.git
 cd crypto-crash
 npm install
-
 ```
 
 ### Run Server:
@@ -120,21 +119,48 @@ Price is fetched via **CoinGecko API**, cached for 10s:
 
 Import the provided collection:
 
-📁 `/postman/CryptoCrashAPI.postman_collection.json`
+📁 `/CryptoCrashAPI.postman_collection.json`
 
 ---
 
 ## 📁 Folder Structure
 
 ```
-- backend/
-  - controllers/
-  - models/
-  - routes/
-  - sockets/
-  - utils/
-  - data/seed.js
-- public/client.html (WebSocket tester)
+CRYPTO-CRASH/
+│
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── gameController.js
+│   │   └── walletController.js
+│   ├── data/
+│   │   └── seed.js
+│   ├── models/
+│   │   ├── Round.js
+│   │   ├── Transaction.js
+│   │   ├── User.js
+│   │   └── Wallet.js
+│   ├── routes/
+│   │   ├── gameRoutes.js
+│   │   └── walletRoutes.js
+│   ├── sockets/
+│   │   ├── gameSocket.js
+│   │   └── socketInstance.js
+│   └── utils/
+│       ├── cache.js
+│       └── cryptoUtils.js
+│
+├── .env
+├── .gitignore
+├── CryptoCrashAPI.postman_collection.json
+├── package.json
+├── package-lock.json
+├── README.md
+├── server.js
+└── frontend/
+    ├── favicon.png
+    └── index.html
 ```
 
 ---
@@ -147,4 +173,6 @@ Import the provided collection:
 - CoinGecko API
 - Postman
 
----
+```
+
+```
